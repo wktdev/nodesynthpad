@@ -43,7 +43,7 @@
                      synth.synthPatch.synths.length = 0;
                      var patchNameOf = document.getElementById('patch-name').value;
                      synth.synthPatch.patchName = patchNameOf;
-
+                     // console.log(synth.synthPatch)
 
 
 
@@ -64,14 +64,23 @@
 
                      $.ajax({
                          type: 'POST',
-                         data: JSON.stringify({
-                             synth: synthPatch
-                         }), // has to be a property of a property in the synth schema
+                         data: JSON.stringify(
+                             synth.synthPatch
+                         ), // has to be a property of a property in the synth schema
                          contentType: 'application/json',
                          url: '/',
-                         success: function(data) {
+                         success: function(datastuff) {
+                             $.ajax({
+                                 url: "/returneddata"
+                             }).done(function(returnedJSON) {
 
-                             console.log("hi");
+                                 $("#application-patch-list li").remove();
+
+                                 synth.getPatchList();
+
+
+                             });
+
                          }
                      });
 
@@ -84,7 +93,19 @@
 
 
              },
+             getPatchList: function() {
+                 $.ajax({
+                     url: "/returneddata"
+                 }).done(function(returnedJSON) {
 
+                     console.log(returnedJSON.docs);
+
+                     for (i = 0; i < returnedJSON.docs.length; i += 1)
+                         $("#application-patch-list").append("<li><a class= 'patch_url' href=/patch/" +
+                             returnedJSON.docs[i]._id + ">" + returnedJSON.docs[i].patchName + "</a></li>");
+
+                 });
+             },
 
              createDiv: function() {
                  var synthDiv = document.createElement("div");
@@ -113,6 +134,7 @@
 
 
              init: function() {
+                 this.getPatchList();
                  this.makeNewSynth();
                  this.makeNewPatch();
 

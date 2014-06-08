@@ -23,7 +23,6 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public'))); // static path for html/javascript and css. This is a directory for front end files.
 
-
 mongoose.connect('mongodb://localhost/supersynth'); // Set mongoDB database to push to
 
 
@@ -43,7 +42,6 @@ http.createServer(app).listen(app.get('port'), function() {
 // END general setup
 
 
-
 // START Schema & Models
 
 var synthSchema = mongoose.Schema({
@@ -55,19 +53,34 @@ var synthSchema = mongoose.Schema({
 var SynthObject = mongoose.model('SynthObject', synthSchema);
 
 
-
 app.get('/', function(req, res) { // ***HOMEPAGE***  Route a view file ( html or jade) to the '/' directory 
     res.render('synth');
 });
 
 
+app.get('/patch/:id', function(req, res) { // ***HOMEPAGE***  Route a view file ( html or jade) to the '/' directory 
+    res.render('synthpatch');
+
+    // SynthObject.findById(req.params.id, function(err, doc) {
+
+    //     console.log(doc)
+
+    // });
+
+});
 
 
+
+
+
+// app.get('/patch', function(req, res) {
+//     res.send('patch name ' + req.query.patchName + ', id ' + req.query.mongoID);
+// });
 app.post('/', function(req, res) {
     var synthJSON = new SynthObject(req.body); // req.body holds parameters that are sent up from the client as part of a POST request
     synthJSON.save(function(err) {
         if (!err) {
-            console.log(synthJSON);
+            // console.log(synthJSON);
 
             res.redirect('/');
         } else {
@@ -83,12 +96,18 @@ app.post('/', function(req, res) {
 
 
 
-
 app.get('/returnedData', function(req, res) {
     SynthObject.find({}, function(err, docs) {
-        res.render('returnedData', {
-            title: 'Tasks index view',
+        res.send('returnedData', {
+
             docs: docs
         });
     });
 });
+
+
+// SynthObject.find(function(err, synthobjects) {
+//     for (i = 0; i < synthobjects[3].synths.length; i += 1)
+//         console.log(synthobjects[3].synths[i].synth_name);
+
+// });

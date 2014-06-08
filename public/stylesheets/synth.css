@@ -18,4 +18,13 @@
         height:100%;
         background-color:blue;
     }
+   #application-patch-list{
+        position:relative;
+        float:right;
+        width:30%;
+        height:30%;
+        background-color:orange;
+    }
+
+ 
  

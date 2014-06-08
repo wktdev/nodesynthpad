@@ -69,14 +69,18 @@
                          ), // has to be a property of a property in the synth schema
                          contentType: 'application/json',
                          url: '/',
-                         success: function(data) {
-                             console.log('HEY IT WORKS now loop through the objs on the server and play with it')
+                         success: function(datastuff) {
+                             $.ajax({
+                                 url: "/returneddata"
+                             }).done(function(returnedJSON) {
 
-                             $.getJSON('/', function(data) {
 
-                                 console.log(data)
+                                 console.log(returnedJSON.docs);
+                                 for (i = 0; i < returnedJSON.docs.length; i += 1)
+                                     $("#application-area").append("<p>" + returnedJSON.docs[i].patchName + "</p>");
 
                              });
+
                          }
                      });
 
@@ -89,7 +93,20 @@
 
 
              },
+             getPatchList: function() {
+                 $.ajax({
+                     url: "/returneddata"
+                 }).done(function(returnedJSON) {
 
+                     console.log(returnedJSON.docs);
+
+                     for (i = 0; i < returnedJSON.docs.length; i += 1)
+                         $("#application-area").append("<a href=/patch" + "/" +
+                             returnedJSON.docs[i]._id + ">" + returnedJSON.docs[i].patchName + "</a>");
+
+
+                 });
+             },
 
              createDiv: function() {
                  var synthDiv = document.createElement("div");
@@ -118,6 +135,7 @@
 
 
              init: function() {
+                 this.getPatchList();
                  this.makeNewSynth();
                  this.makeNewPatch();
 
