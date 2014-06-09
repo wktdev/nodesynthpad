@@ -35,8 +35,6 @@
 
 
 
-
-
              makeNewPatch: function() {
                  $("#submit-patch").click(function(event) {
                      event.preventDefault();
@@ -112,7 +110,46 @@
                      url: "/loadedpatch"
                  }).done(function(returnedJSON) {
 
-                     console.log(returnedJSON.docs);
+                     // console.log(returnedJSON.docs);
+                     // console.log(returnedJSON.docs[0].patchName);
+                     // console.log(returnedJSON.docs[0].synths.length);
+
+                     for (i = 0; i < returnedJSON.docs[0].synths.length; i += 1) {
+
+                         console.log(returnedJSON.docs[0].synths[i].synth_name)
+
+
+                         var synthDiv = document.createElement("div");
+                         synthDiv.className = "synthDiv";
+                         synthDiv.id = returnedJSON.docs[0].synths[i].synth_name;
+                         var applicationArea = document.getElementById('application-area');
+                         applicationArea.appendChild(synthDiv);
+                         $(synthDiv).draggable({});
+                         console.log(returnedJSON.docs[0].synths[i].xpos)
+                         $(synthDiv).css("left", returnedJSON.docs[0].synths[i].xpos + "px");
+                         $(synthDiv).css("top", returnedJSON.docs[0].synths[i].ypos + "px");
+
+
+                         synthDiv.onmousedown = function() {
+                             oscillator = audioContext.createOscillator();
+                             oscillator.type = 'sawtooth';
+                             oscillator.frequency.value = 100;
+                             oscillator.connect(audioContext.destination);
+                             oscillator.start(0);
+                         }
+
+
+                         synthDiv.onmouseup = function() {
+                             oscillator.stop();
+
+                         };
+
+                     };
+
+
+
+
+
 
                  });
              },
@@ -120,7 +157,7 @@
              createDiv: function() {
                  var synthDiv = document.createElement("div");
                  synthDiv.className = "synthDiv";
-                 synthDiv.id = "synthDiv" + (this.idCounter++);
+                 synthDiv.id = "synthDiv" + "-" + (Math.random().toString(36).slice(2));
                  var applicationArea = document.getElementById('application-area');
                  var body = document.getElementsByName('body');
                  applicationArea.appendChild(synthDiv);
@@ -129,7 +166,7 @@
                  synthDiv.onmousedown = function() {
                      oscillator = audioContext.createOscillator();
                      oscillator.type = 'sawtooth';
-                     oscillator.frequency.value = 300;
+                     oscillator.frequency.value = 100;
                      oscillator.connect(audioContext.destination);
                      oscillator.start(0);
                  }

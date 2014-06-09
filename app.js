@@ -78,16 +78,13 @@ app.get('/loadedpatch', function(req, res) {
     SynthObject.find({
         _id: id
     }, function(err, docs) {
+
         res.send('loadedpatch', {
 
             docs: docs
         });
     });
 });
-
-
-
-
 
 
 
@@ -106,11 +103,6 @@ app.post('/', function(req, res) {
         }
     });
 });
-
-
-
-
-
 
 
 
