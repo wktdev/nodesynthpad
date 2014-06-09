@@ -53,7 +53,7 @@
 
 
 
-                         synth.synthPatch.synths.push({
+                         synth.synthPatch.synths.push({ // Pushed the synths to a json object called 'synthPatch.synths'
                              'synth_name': this.id,
                              'xpos': pos.left,
                              'ypos': pos.top
@@ -107,6 +107,16 @@
                  });
              },
 
+             getCurrentPatch: function() {
+                 $.ajax({
+                     url: "/loadedpatch"
+                 }).done(function(returnedJSON) {
+
+                     console.log(returnedJSON.docs);
+
+                 });
+             },
+
              createDiv: function() {
                  var synthDiv = document.createElement("div");
                  synthDiv.className = "synthDiv";
@@ -132,6 +142,25 @@
 
              },
 
+             getUrlPatchID: function() {
+                 var pathArray = window.location.pathname.split('/');
+                 var patchIDfromURL = pathArray[2];
+                 console.log(patchIDfromURL);
+
+
+                 $.ajax({
+                     type: 'GET',
+                     data: patchIDfromURL,
+                     contentType: 'application/json',
+                     url: '/',
+                     success: function(datastuff) {
+
+
+                     }
+                 });
+
+             },
+
 
 
 
@@ -142,6 +171,8 @@
                  this.getPatchList();
                  this.makeNewSynth();
                  this.makeNewPatch();
+                 this.getCurrentPatch();
+                 this.getUrlPatchID();
 
 
              }

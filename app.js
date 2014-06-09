@@ -57,19 +57,24 @@ app.get('/', function(req, res) { // ***HOMEPAGE***  Route a view file ( html or
     res.render('synth');
 });
 
-app.get('/loadedpatch', function(req, res) { // ***HOMEPAGE***  Route a view file ( html or jade) to the '/' directory 
-    res.render('loadedpatch');
-});
+// app.get('/loadedpatch', function(req, res) { // ***HOMEPAGE***  Route a view file ( html or jade) to the '/' directory 
+//     res.render('loadedpatch');
+// });
 
 
-
+var id;
 
 app.get('/patch/:id', function(req, res) { // ***HOMEPAGE***  Route a view file ( html or jade) to the '/' directory 
 
     res.render('synthpatch');
-    var id = req.params.id;
+    id = req.params.id;
 
-    console.log(id);
+
+    console.log(id)
+
+});
+
+app.get('/loadedpatch', function(req, res) {
     SynthObject.find({
         _id: id
     }, function(err, docs) {
@@ -78,10 +83,6 @@ app.get('/patch/:id', function(req, res) { // ***HOMEPAGE***  Route a view file 
             docs: docs
         });
     });
-
-
-
-
 });
 
 
