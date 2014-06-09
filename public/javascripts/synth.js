@@ -98,7 +98,7 @@
                      url: "/returneddata"
                  }).done(function(returnedJSON) {
 
-                     console.log(returnedJSON.docs);
+                     // console.log(returnedJSON.docs);
 
                      for (i = 0; i < returnedJSON.docs.length; i += 1)
                          $("#application-patch-list").append("<li><a class= 'patch_url' href=/patch/" +
@@ -133,10 +133,16 @@
              },
 
 
+
+
+
+
+
              init: function() {
                  this.getPatchList();
                  this.makeNewSynth();
                  this.makeNewPatch();
+
 
              }
 
