@@ -19,6 +19,15 @@
         width:100%;
         height:100%;
     }
+    .synthDivHandle{
+        
+        position:absolute;
+        border-radius:5px;
+        top:100px;
+        width:100px;
+        height:30px;
+        background-color:white;
+    }
 
   
     #application-area {

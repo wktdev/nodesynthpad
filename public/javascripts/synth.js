@@ -144,14 +144,22 @@ $(function() {
                         $(synthDiv).fadeIn(1000);
                         applicationArea.appendChild(synthDiv);
 
+
+
                         $(synthDiv).draggable({
                             containment: applicationArea
                         });
 
 
+
+
+
+
                         console.log(returnedJSON.docs[0].synths[i].xpos)
                         $(synthDiv).css("left", returnedJSON.docs[0].synths[i].xpos + "px");
                         $(synthDiv).css("top", returnedJSON.docs[0].synths[i].ypos + "px");
+
+
 
 
                         synthDiv.onmouseover = function() {
@@ -160,11 +168,35 @@ $(function() {
                             oscillator.frequency.value = 100;
                             oscillator.connect(audioContext.destination);
                             oscillator.start(0);
+
                         }
+
+
 
 
                         synthDiv.onmouseout = function() {
                             oscillator.stop();
+
+                        };
+
+
+
+                        // Create handles for divSynths //
+                        var synthDivHandle = document.createElement("div");
+                        synthDivHandle.className = "synthDivHandle";
+                        synthDivHandle.id = "handle-" + (Math.random().toString(36).slice(2));
+                        synthDiv.appendChild(synthDivHandle);
+
+
+                        $(synthDiv).draggable({
+                            handle: synthDivHandle
+                        });
+                        synthDivHandle.onmousemove = function() {
+                            oscillator.stop(0)
+                        }
+
+                        synth.onmouseout = function() {
+                            oscillator.stop(0);
 
                         };
 
@@ -184,11 +216,18 @@ $(function() {
                 synthDiv.id = "synthDiv" + "-" + (Math.random().toString(36).slice(2));
                 var applicationArea = document.getElementById('application-area');
                 var body = document.getElementsByName('body');
+                // Create handles for divSynths //
+                var synthDivHandle = document.createElement("div");
+                synthDivHandle.className = "synthDivHandle";
+                synthDivHandle.id = "handle-" + (Math.random().toString(36).slice(2));;
+                synthDiv.appendChild(synthDivHandle);
                 // $(html).hide().appendTo("#mycontent").fadeIn(1000);
                 $(synthDiv).hide().appendTo(applicationArea).fadeIn(1000);
                 $(synthDiv).draggable({
                     containment: applicationArea
                 });
+
+
 
                 synthDiv.onmouseover = function() {
                     oscillator = audioContext.createOscillator();
@@ -203,6 +242,21 @@ $(function() {
                     oscillator.stop();
 
                 };
+
+                $(synthDiv).draggable({
+                    handle: synthDivHandle
+                });
+                synthDivHandle.onmousemove = function() {
+                    oscillator.stop(0)
+                }
+
+                synth.onmouseout = function() {
+                    oscillator.stop(0);
+
+                };
+
+
+
 
             },
 
