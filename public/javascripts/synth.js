@@ -1,226 +1,253 @@
- audioContext = new webkitAudioContext();
+var audioContext;
+if (typeof AudioContext !== "undefined") {
+    audioContext = new AudioContext();
+} else if (typeof webkitAudioContext !== "undefined") {
+    audioContext = new webkitAudioContext();
+} else if (typeof mozAudioContext !== "undefined") {
+    audioContext = new webkitAudioContext();
+} else {
+    throw new Error('AudioContext not supported');
+}
 
- $(function() {
-     var MODULE = (function() {
+"use strict"
+$(function() {
+    var MODULE = (function() {
 
-         var synth = {
-             idCounter: null,
-             synthName: null,
+        var synth = {
+            idCounter: null,
+            synthName: null,
 
-             makeNewSynth: function() {
-                 $('#new-synth').click(function(event) {
-                     event.preventDefault();
-                     synth.createDiv();
+            makeNewSynth: function() {
+                $('#new-synth').click(function(event) {
+                    event.preventDefault();
+                    synth.createDiv();
 
-                 });
+                });
 
-             },
+            },
 
-             synthPatch: {
+            synthPatch: {
 
-                 "patchName": "",
-                 "synths": [
+                "patchName": "",
+                "synths": [
 
-                 ]
-                 // "synth_octave_pitch_sliders": [
+                ]
+                // "synth_octave_pitch_sliders": [
 
-                 // ],
+                // ],
 
-                 // "synth_note_pitch_sliders": [
+                // "synth_note_pitch_sliders": [
 
-                 // ],
+                // ],
 
 
-             },
+            },
 
 
 
-             makeNewPatch: function() {
-                 $("#submit-patch").click(function(event) {
-                     event.preventDefault();
-                     synth.synthPatch.synths.length = 0;
-                     var patchNameOf = document.getElementById('patch-name').value;
-                     synth.synthPatch.patchName = patchNameOf;
-                     // console.log(synth.synthPatch)
+            makeNewPatch: function() {
+                $("#submit-patch").click(function(event) {
+                    event.preventDefault();
+                    synth.synthPatch.synths.length = 0;
+                    var patchNameOf = document.getElementById('patch-name').value;
+                    synth.synthPatch.patchName = patchNameOf;
+                    // console.log(synth.synthPatch)
 
 
 
-                     $(".synthDiv").each(function() { // finds all divs with class .synth and gets their individual ID and Left/Top CSS positional values
-                         var temp = $("#" + this.id);
-                         var pos = $(temp).position();
+                    $(".synthDiv").each(function() { // finds all divs with class .synth and gets their individual ID and Left/Top CSS positional values
+                        var temp = $("#" + this.id);
+                        var pos = $(temp).position();
 
 
 
-                         synth.synthPatch.synths.push({ // Pushed the synths to a json object called 'synthPatch.synths'
-                             'synth_name': this.id,
-                             'xpos': pos.left,
-                             'ypos': pos.top
-                         });
+                        synth.synthPatch.synths.push({ // Pushed the synths to a json object called 'synthPatch.synths'
+                            'synth_name': this.id,
+                            'xpos': pos.left,
+                            'ypos': pos.top
+                        });
 
 
-                     });
+                    });
 
-                     $.ajax({
-                         type: 'POST',
-                         data: JSON.stringify(
-                             synth.synthPatch
-                         ), // has to be a property of a property in the synth schema
-                         contentType: 'application/json',
-                         url: '/',
-                         success: function(datastuff) {
-                             $.ajax({
-                                 url: "/returneddata"
-                             }).done(function(returnedJSON) {
+                    $.ajax({
+                        type: 'POST',
+                        data: JSON.stringify(
+                            synth.synthPatch
+                        ), // has to be a property of a property in the synth schema
+                        contentType: 'application/json',
+                        url: '/',
+                        success: function(datastuff) {
+                            $.ajax({
+                                url: "/returneddata"
+                            }).done(function(returnedJSON) {
 
-                                 $("#application-patch-list li").remove();
+                                $("#application-patch-list li").remove();
 
-                                 synth.getPatchList();
+                                synth.getPatchList();
 
 
-                             });
+                            });
 
-                         }
-                     });
+                        }
+                    });
 
 
 
-                     // console.log(synth.patch);
-                 });
+                    // console.log(synth.patch);
+                });
 
 
 
 
-             },
-             getPatchList: function() {
-                 $.ajax({
-                     url: "/returneddata"
-                 }).done(function(returnedJSON) {
+            },
+            getPatchList: function() {
+                $.ajax({
+                    url: "/returneddata"
+                }).done(function(returnedJSON) {
 
-                     // console.log(returnedJSON.docs);
+                    // console.log(returnedJSON.docs);
 
-                     for (i = 0; i < returnedJSON.docs.length; i += 1)
-                         $("#application-patch-list").append("<li><a class= 'patch_url' href=/patch/" +
-                             returnedJSON.docs[i]._id + ">" + returnedJSON.docs[i].patchName + "</a></li>");
+                    for (i = 0; i < returnedJSON.docs.length; i += 1) {
+                        $("#application-patch-list").append("<li><a class= 'patch_url' href=/patch/" +
+                            returnedJSON.docs[i]._id + ">" + returnedJSON.docs[i].patchName + "</a></li>");
+                    }
 
-                 });
-             },
+                    var list = $('#application-patch-list');
+                    var listItems = list.children('li');
+                    list.append(listItems.get().reverse());
 
-             getCurrentPatch: function() {
-                 $.ajax({
-                     url: "/loadedpatch"
-                 }).done(function(returnedJSON) {
+                    // after you load the search results ...
+                    $('#application-patch-list').children('li').slice(15).hide();
 
-                     // console.log(returnedJSON.docs);
-                     // console.log(returnedJSON.docs[0].patchName);
-                     // console.log(returnedJSON.docs[0].synths.length);
+                });
+            },
 
-                     for (i = 0; i < returnedJSON.docs[0].synths.length; i += 1) {
+            getCurrentPatch: function() {
+                $.ajax({
+                    url: "/loadedpatch"
+                }).done(function(returnedJSON) {
 
-                         console.log(returnedJSON.docs[0].synths[i].synth_name)
+                    // console.log(returnedJSON.docs);
+                    // console.log(returnedJSON.docs[0].patchName);
+                    // console.log(returnedJSON.docs[0].synths.length);
 
+                    for (i = 0; i < returnedJSON.docs[0].synths.length; i += 1) {
 
-                         var synthDiv = document.createElement("div");
-                         synthDiv.className = "synthDiv";
-                         synthDiv.id = returnedJSON.docs[0].synths[i].synth_name;
-                         var applicationArea = document.getElementById('application-area');
-                         applicationArea.appendChild(synthDiv);
-                         $(synthDiv).draggable({});
-                         console.log(returnedJSON.docs[0].synths[i].xpos)
-                         $(synthDiv).css("left", returnedJSON.docs[0].synths[i].xpos + "px");
-                         $(synthDiv).css("top", returnedJSON.docs[0].synths[i].ypos + "px");
+                        console.log(returnedJSON.docs[0].synths[i].synth_name)
 
 
-                         synthDiv.onmousedown = function() {
-                             oscillator = audioContext.createOscillator();
-                             oscillator.type = 'sawtooth';
-                             oscillator.frequency.value = 100;
-                             oscillator.connect(audioContext.destination);
-                             oscillator.start(0);
-                         }
+                        var synthDiv = document.createElement("div");
+                        synthDiv.className = "synthDiv";
+                        synthDiv.id = returnedJSON.docs[0].synths[i].synth_name;
+                        var applicationArea = document.getElementById('application-area');
+                        $(synthDiv).fadeIn(1000);
+                        applicationArea.appendChild(synthDiv);
 
+                        $(synthDiv).draggable({
+                            containment: applicationArea
+                        });
 
-                         synthDiv.onmouseup = function() {
-                             oscillator.stop();
 
-                         };
+                        console.log(returnedJSON.docs[0].synths[i].xpos)
+                        $(synthDiv).css("left", returnedJSON.docs[0].synths[i].xpos + "px");
+                        $(synthDiv).css("top", returnedJSON.docs[0].synths[i].ypos + "px");
 
-                     };
 
+                        synthDiv.onmouseover = function() {
+                            oscillator = audioContext.createOscillator();
+                            oscillator.type = 'sawtooth';
+                            oscillator.frequency.value = 100;
+                            oscillator.connect(audioContext.destination);
+                            oscillator.start(0);
+                        }
 
 
+                        synthDiv.onmouseout = function() {
+                            oscillator.stop();
 
+                        };
 
+                    };
 
-                 });
-             },
 
-             createDiv: function() {
-                 var synthDiv = document.createElement("div");
-                 synthDiv.className = "synthDiv";
-                 synthDiv.id = "synthDiv" + "-" + (Math.random().toString(36).slice(2));
-                 var applicationArea = document.getElementById('application-area');
-                 var body = document.getElementsByName('body');
-                 applicationArea.appendChild(synthDiv);
-                 $(synthDiv).draggable({});
 
-                 synthDiv.onmousedown = function() {
-                     oscillator = audioContext.createOscillator();
-                     oscillator.type = 'sawtooth';
-                     oscillator.frequency.value = 100;
-                     oscillator.connect(audioContext.destination);
-                     oscillator.start(0);
-                 }
 
 
-                 synthDiv.onmouseup = function() {
-                     oscillator.stop();
 
-                 };
+                });
+            },
 
-             },
+            createDiv: function() {
+                var synthDiv = document.createElement("div");
+                synthDiv.className = "synthDiv";
+                synthDiv.id = "synthDiv" + "-" + (Math.random().toString(36).slice(2));
+                var applicationArea = document.getElementById('application-area');
+                var body = document.getElementsByName('body');
+                // $(html).hide().appendTo("#mycontent").fadeIn(1000);
+                $(synthDiv).hide().appendTo(applicationArea).fadeIn(1000);
+                $(synthDiv).draggable({
+                    containment: applicationArea
+                });
 
-             getUrlPatchID: function() {
-                 var pathArray = window.location.pathname.split('/');
-                 var patchIDfromURL = pathArray[2];
-                 console.log(patchIDfromURL);
+                synthDiv.onmouseover = function() {
+                    oscillator = audioContext.createOscillator();
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.value = 100;
+                    oscillator.connect(audioContext.destination);
+                    oscillator.start(0);
+                }
 
 
-                 $.ajax({
-                     type: 'GET',
-                     data: patchIDfromURL,
-                     contentType: 'application/json',
-                     url: '/',
-                     success: function(datastuff) {
+                synthDiv.onmouseout = function() {
+                    oscillator.stop();
 
+                };
 
-                     }
-                 });
+            },
 
-             },
+            getUrlPatchID: function() {
+                var pathArray = window.location.pathname.split('/');
+                var patchIDfromURL = pathArray[2];
+                console.log(patchIDfromURL);
 
 
+                $.ajax({
+                    type: 'GET',
+                    data: patchIDfromURL,
+                    contentType: 'application/json',
+                    url: '/',
+                    success: function(datastuff) {
 
 
+                    }
+                });
 
+            },
 
 
-             init: function() {
-                 this.getPatchList();
-                 this.makeNewSynth();
-                 this.makeNewPatch();
-                 this.getCurrentPatch();
-                 this.getUrlPatchID();
 
 
-             }
 
 
-         }
-         return synth
 
-     }());
+            init: function() {
+                this.getPatchList();
+                this.makeNewSynth();
+                this.makeNewPatch();
+                this.getCurrentPatch();
+                this.getUrlPatchID();
 
-     var newSynth = MODULE;
-     newSynth.init();
 
- });
+            }
+
+
+        }
+        return synth
+
+    }());
+
+    var newSynth = MODULE;
+    newSynth.init();
+
+});
