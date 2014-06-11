@@ -43,7 +43,14 @@ $(function() {
 
             },
 
+            clearSynths: function() {
+                $("#clear-synths").click(function(event) {
+                    event.preventDefault();
+                    $(".synthDiv").remove();
 
+                });
+
+            },
 
             makeNewPatch: function() {
                 $("#submit-patch").click(function(event) {
@@ -291,6 +298,7 @@ $(function() {
                 this.makeNewPatch();
                 this.getCurrentPatch();
                 this.getUrlPatchID();
+                this.clearSynths();
 
 
             }

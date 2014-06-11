@@ -17,6 +17,10 @@ html
       | New synth
 
 
+    button#clear-synths(name='synth-clear', type='submit')
+      | Clear 
+
+
     form(role='form', method='post', action='/')
       input#patch-name(name='patch', type='form')
       button#submit-patch(name='submit-patch', type='submit') Save patch
