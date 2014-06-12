@@ -32,9 +32,10 @@ $(function() {
                 "synths": [
 
                 ],
-                // "synth_octave_pitch_sliders": [
 
-                // ],
+                "synthOctavePitchSliders": [
+
+                ],
 
                 "synthNotePitchSliders": [
 
@@ -55,6 +56,9 @@ $(function() {
                     event.preventDefault();
                     synth.synthPatch.synths.length = 0;
                     synth.synthPatch.synthNotePitchSliders.length = 0;
+                    synth.synthPatch.synthOctavePitchSliders.length = 0;
+
+                    console.log(synth.synthPatch.synthNotePitchSliders.length)
                     var patchNameOf = document.getElementById('patch-name').value;
                     synth.synthPatch.patchName = patchNameOf;
                     // console.log(synth.synthPatch)
@@ -101,7 +105,25 @@ $(function() {
 
 
 
+                    /******************************************************************/
 
+
+                    $(".oscPitchOctave").each(function() { // finds all sliders by class and get their ID and slider value
+                        var temp = $("#" + this.id);
+                        var sliderOctavePitchValue = temp.val();
+                        console.log(sliderOctavePitchValue)
+
+
+                        synth.synthPatch.synthOctavePitchSliders.push({
+                            'synthNotePitchSliderName': this.id,
+                            'synthNotePitchSliderValue': sliderOctavePitchValue
+
+                        });
+
+
+                    });
+
+                    /****************************************************************/
 
 
 
@@ -132,7 +154,6 @@ $(function() {
 
                     console.log(synth.synthPatch)
                 });
-
 
 
 
@@ -188,13 +209,9 @@ $(function() {
 
 
 
-
-
-
                         console.log(returnedJSON.docs[0].synths[i].xpos)
                         $(synthDiv).css("left", returnedJSON.docs[0].synths[i].xpos + "px");
                         $(synthDiv).css("top", returnedJSON.docs[0].synths[i].ypos + "px");
-
 
 
 
@@ -206,7 +223,6 @@ $(function() {
                             oscillator.start(0);
 
                         }
-
 
 
 
@@ -240,9 +256,6 @@ $(function() {
 
 
 
-
-
-
                 });
             },
 
@@ -267,6 +280,16 @@ $(function() {
                 synthDiv.appendChild(oscNoteValueInput);
 
 
+                var oscPitchOctave = document.createElement('input');
+                oscPitchOctave.type = "range";
+                oscPitchOctave.min = '-24';
+                oscPitchOctave.max = '-1';
+                // oscPitchOctave.value = synthQueForLoad[i][4];
+                oscPitchOctave.step = '1';
+                oscPitchOctave.className = "oscPitchOctave";
+                oscPitchOctave.id = "oscPitchOctave_" + synthDiv.id;
+                synthDiv.appendChild(oscPitchOctave);
+
 
 
                 // Create handles for divSynths //
@@ -288,7 +311,8 @@ $(function() {
                 synthDiv.onmouseover = function() {
                     oscillator = audioContext.createOscillator();
                     oscillator.type = 'sawtooth';
-                    oscillator.frequency.value = oscNoteValueInput.value;
+                    oscillator.frequency.value = 440 / oscPitchOctave.value;
+                    oscillator.detune.value = oscNoteValueInput.value;
                     oscillator.connect(audioContext.destination);
                     oscillator.start(0);
                 }
@@ -313,7 +337,6 @@ $(function() {
 
 
 
-
             },
 
             getUrlPatchID: function() {
@@ -334,10 +357,6 @@ $(function() {
                 });
 
             },
-
-
-
-
 
 
 
