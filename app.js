@@ -44,6 +44,7 @@ http.createServer(app).listen(app.get('port'), function() {
 var synthSchema = mongoose.Schema({
     patchName: String,
     synths: Object,
+    synthNotePitchSliders: Object
 
 });
 
@@ -95,7 +96,8 @@ app.post('/', function(req, res) {
     synthJSON.save(function(err) {
         if (!err) {
 
-            res.redirect('/'); // console.log(synthJSON);
+            res.redirect('/');
+            console.log(synthJSON);
 
         } else {
             throw err;

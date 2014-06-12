@@ -31,16 +31,14 @@ $(function() {
                 "patchName": "",
                 "synths": [
 
-                ]
+                ],
                 // "synth_octave_pitch_sliders": [
 
                 // ],
 
-                // "synth_note_pitch_sliders": [
+                "synthNotePitchSliders": [
 
-                // ],
-
-
+                ]
             },
 
             clearSynths: function() {
@@ -56,6 +54,7 @@ $(function() {
                 $("#submit-patch").click(function(event) {
                     event.preventDefault();
                     synth.synthPatch.synths.length = 0;
+                    synth.synthPatch.synthNotePitchSliders.length = 0;
                     var patchNameOf = document.getElementById('patch-name').value;
                     synth.synthPatch.patchName = patchNameOf;
                     // console.log(synth.synthPatch)
@@ -77,9 +76,39 @@ $(function() {
 
                     });
 
+
+                    /******************************************************************/
+
+
+                    $(".oscNoteValueInput").each(function() { // finds all sliders by class and get their ID and slider value
+                        var temp = $("#" + this.id);
+                        var sliderPitchValue = temp.val();
+                        console.log(sliderPitchValue)
+
+
+                        synth.synthPatch.synthNotePitchSliders.push({
+                            'synthNotePitchSliderName': this.id,
+                            'synthNotePitchSliderValue': sliderPitchValue
+
+                        });
+
+
+                    });
+
+                    /****************************************************************/
+
+
+
+
+
+
+
+
+
                     $.ajax({
                         type: 'POST',
                         data: JSON.stringify(
+
                             synth.synthPatch
                         ), // has to be a property of a property in the synth schema
                         contentType: 'application/json',
@@ -101,7 +130,7 @@ $(function() {
 
 
 
-                    // console.log(synth.patch);
+                    console.log(synth.synthPatch)
                 });
 
 
@@ -223,11 +252,31 @@ $(function() {
                 synthDiv.id = "synthDiv" + "-" + (Math.random().toString(36).slice(2));
                 var applicationArea = document.getElementById('application-area');
                 var body = document.getElementsByName('body');
+
+
+
+                // osc Note Value Slider Creation.
+                var oscNoteValueInput = document.createElement('input');
+                oscNoteValueInput.type = "range";
+                oscNoteValueInput.min = '100';
+                oscNoteValueInput.max = '1200';
+                oscNoteValueInput.step = '100';
+                // oscNoteValueInput.value = synthQueForLoad[i][3]; 
+                oscNoteValueInput.className = "oscNoteValueInput";
+                oscNoteValueInput.id = "oscNoteValueInput_" + synthDiv.id;
+                synthDiv.appendChild(oscNoteValueInput);
+
+
+
+
                 // Create handles for divSynths //
                 var synthDivHandle = document.createElement("div");
                 synthDivHandle.className = "synthDivHandle";
                 synthDivHandle.id = "handle-" + (Math.random().toString(36).slice(2));;
                 synthDiv.appendChild(synthDivHandle);
+
+
+
                 // $(html).hide().appendTo("#mycontent").fadeIn(1000);
                 $(synthDiv).hide().appendTo(applicationArea).fadeIn(1000);
                 $(synthDiv).draggable({
@@ -239,7 +288,7 @@ $(function() {
                 synthDiv.onmouseover = function() {
                     oscillator = audioContext.createOscillator();
                     oscillator.type = 'sawtooth';
-                    oscillator.frequency.value = 100;
+                    oscillator.frequency.value = oscNoteValueInput.value;
                     oscillator.connect(audioContext.destination);
                     oscillator.start(0);
                 }
