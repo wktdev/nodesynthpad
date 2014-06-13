@@ -44,8 +44,9 @@ http.createServer(app).listen(app.get('port'), function() {
 var synthSchema = mongoose.Schema({
     patchName: String,
     synths: Object,
-    synthNotePitchSliders: Object,
-    synthOctavePitchSliders: Object
+    synthOctavePitchSliders: Object,
+    synthDetunePitchSliders: Object
+
 
 });
 

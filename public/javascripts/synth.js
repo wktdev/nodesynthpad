@@ -37,7 +37,7 @@ $(function() {
 
                 ],
 
-                "synthNotePitchSliders": [
+                "synthDetunePitchSliders": [
 
                 ]
             },
@@ -55,10 +55,10 @@ $(function() {
                 $("#submit-patch").click(function(event) {
                     event.preventDefault();
                     synth.synthPatch.synths.length = 0;
-                    synth.synthPatch.synthNotePitchSliders.length = 0;
+                    synth.synthPatch.synthDetunePitchSliders.length = 0;
                     synth.synthPatch.synthOctavePitchSliders.length = 0;
 
-                    console.log(synth.synthPatch.synthNotePitchSliders.length)
+                    console.log(synth.synthPatch.synthDetunePitchSliders.length)
                     var patchNameOf = document.getElementById('patch-name').value;
                     synth.synthPatch.patchName = patchNameOf;
                     // console.log(synth.synthPatch)
@@ -84,15 +84,15 @@ $(function() {
                     /******************************************************************/
 
 
-                    $(".oscNoteValueInput").each(function() { // finds all sliders by class and get their ID and slider value
+                    $(".oscPitchDetune").each(function() { // finds all sliders by class and get their ID and slider value
                         var temp = $("#" + this.id);
                         var sliderPitchValue = temp.val();
                         console.log(sliderPitchValue)
 
 
-                        synth.synthPatch.synthNotePitchSliders.push({
-                            'synthNotePitchSliderName': this.id,
-                            'synthNotePitchSliderValue': sliderPitchValue
+                        synth.synthPatch.synthDetunePitchSliders.push({
+                            'synthPitchDetuneName': this.id,
+                            'synthPitchDetuneValue': sliderPitchValue
 
                         });
 
@@ -115,8 +115,8 @@ $(function() {
 
 
                         synth.synthPatch.synthOctavePitchSliders.push({
-                            'synthNotePitchSliderName': this.id,
-                            'synthNotePitchSliderValue': sliderOctavePitchValue
+                            'oscPitchOctaveName': this.id,
+                            'oscPitchOctaveValue': sliderOctavePitchValue
 
                         });
 
@@ -208,8 +208,6 @@ $(function() {
                         });
 
 
-
-                        console.log(returnedJSON.docs[0].synths[i].xpos)
                         $(synthDiv).css("left", returnedJSON.docs[0].synths[i].xpos + "px");
                         $(synthDiv).css("top", returnedJSON.docs[0].synths[i].ypos + "px");
 
@@ -262,22 +260,23 @@ $(function() {
             createDiv: function() {
                 var synthDiv = document.createElement("div");
                 synthDiv.className = "synthDiv";
-                synthDiv.id = "synthDiv" + "-" + (Math.random().toString(36).slice(2));
+                var randomKeyID = (Math.random().toString(36).slice(2))
+                synthDiv.id = "synthDiv" + "-" + randomKeyID;
                 var applicationArea = document.getElementById('application-area');
                 var body = document.getElementsByName('body');
 
 
 
                 // osc Note Value Slider Creation.
-                var oscNoteValueInput = document.createElement('input');
-                oscNoteValueInput.type = "range";
-                oscNoteValueInput.min = '100';
-                oscNoteValueInput.max = '1200';
-                oscNoteValueInput.step = '100';
-                // oscNoteValueInput.value = synthQueForLoad[i][3]; 
-                oscNoteValueInput.className = "oscNoteValueInput";
-                oscNoteValueInput.id = "oscNoteValueInput_" + synthDiv.id;
-                synthDiv.appendChild(oscNoteValueInput);
+                var oscPitchDetune = document.createElement('input');
+                oscPitchDetune.type = "range";
+                oscPitchDetune.min = '100';
+                oscPitchDetune.max = '1200';
+                oscPitchDetune.step = '100';
+                // oscPitchDetune.value = synthQueForLoad[i][3]; 
+                oscPitchDetune.className = "oscPitchDetune";
+                oscPitchDetune.id = "oscPitchDetune-" + randomKeyID;
+                synthDiv.appendChild(oscPitchDetune);
 
 
                 var oscPitchOctave = document.createElement('input');
@@ -287,7 +286,7 @@ $(function() {
                 // oscPitchOctave.value = synthQueForLoad[i][4];
                 oscPitchOctave.step = '1';
                 oscPitchOctave.className = "oscPitchOctave";
-                oscPitchOctave.id = "oscPitchOctave_" + synthDiv.id;
+                oscPitchOctave.id = "oscPitchOctave-" + randomKeyID;
                 synthDiv.appendChild(oscPitchOctave);
 
 
@@ -312,7 +311,7 @@ $(function() {
                     oscillator = audioContext.createOscillator();
                     oscillator.type = 'sawtooth';
                     oscillator.frequency.value = 440 / oscPitchOctave.value;
-                    oscillator.detune.value = oscNoteValueInput.value;
+                    oscillator.detune.value = oscPitchDetune.value;
                     oscillator.connect(audioContext.destination);
                     oscillator.start(0);
                 }
