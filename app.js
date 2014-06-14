@@ -14,7 +14,7 @@ var app = express();
 // START genera setup all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'hbs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
@@ -65,10 +65,12 @@ app.get('/', function(req, res) { // ***HOMEPAGE***  Route a view file ( html or
 
 
 
+
+
 var id;
 
 app.get('/patch/:id', function(req, res) {
-    res.render('synthpatch');
+    res.render('synthpatchcurrent');
     id = req.params.id; // pushing URL id to id variable ABOVE so the function below can grab it!                                   
     console.log(id)
 
