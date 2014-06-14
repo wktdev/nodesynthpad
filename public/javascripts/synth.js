@@ -180,6 +180,8 @@ $(function() {
                 });
             },
 
+            show: true,
+
             getCurrentPatch: function() {
 
                 $.ajax({
@@ -274,10 +276,26 @@ $(function() {
                                 oscillator.stop(0)
                             }
 
-                            synth.onmouseout = function() {
-                                oscillator.stop(0);
 
-                            };
+
+
+                            synthDivHandle.ondblclick = function() {
+                                console.log(this.id);
+
+                                if (synth.show) {
+
+                                    $("." + oscPitchOctave.className).hide();
+                                    $("." + oscPitchDetune.className).hide();
+
+                                    synth.show = false;
+                                } else {
+                                    $("." + oscPitchOctave.className).show();
+                                    $("." + oscPitchDetune.className).show();
+                                    synth.show = true;
+
+                                }
+
+                            }
 
                         }(i));
 
@@ -318,11 +336,15 @@ $(function() {
                 synthDiv.appendChild(oscPitchOctave);
 
 
+                // $(oscPitchDetune).hide()
+                // $(oscPitchOctave).hide()
+
+
 
                 // Create handles for divSynths //
                 var synthDivHandle = document.createElement("div");
                 synthDivHandle.className = "synthDivHandle";
-                synthDivHandle.id = "handle-" + (Math.random().toString(36).slice(2));;
+                synthDivHandle.id = "handle-" + randomKeyID;
                 synthDiv.appendChild(synthDivHandle);
 
 
@@ -357,10 +379,26 @@ $(function() {
                     oscillator.stop(0)
                 }
 
-                synth.onmouseout = function() {
-                    oscillator.stop(0);
+                synthDivHandle.ondblclick = function() {
+                    console.log(this.id);
 
-                };
+                    if (synth.show) {
+
+                        $("." + oscPitchOctave.className).hide();
+                        $("." + oscPitchDetune.className).hide();
+
+                        synth.show = false;
+                    } else {
+                        $("." + oscPitchOctave.className).show();
+                        $("." + oscPitchDetune.className).show();
+                        synth.show = true;
+
+                    }
+
+                }
+
+
+
 
 
 
