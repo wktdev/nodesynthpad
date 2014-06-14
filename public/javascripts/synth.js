@@ -91,8 +91,8 @@ $(function() {
 
 
                         synth.synthPatch.synthDetunePitchSliders.push({
-                            'oscPitchDetuneName': this.id,
-                            'oscPitchDetuneValue': sliderPitchValue
+                            'synthPitchDetuneName': this.id,
+                            'synthPitchDetuneValue': sliderPitchValue
 
                         });
 
@@ -215,26 +215,15 @@ $(function() {
                             $(synthDiv).css("top", returnedJSON.docs[0].synths[i].ypos + "px");
 
 
-                            var oscPitchDetune = document.createElement('input');
-                            oscPitchDetune.type = "range";
-                            oscPitchDetune.min = '100';
-                            oscPitchDetune.max = '1200';
-                            oscPitchDetune.step = '100';
-                            oscPitchDetune.value = returnedJSON.docs[0].synthDetunePitchSliders[i].oscPitchDetuneValue;
-                            oscPitchDetune.className = "oscPitchDetune";
-                            oscPitchDetune.id = returnedJSON.docs[0].synthDetunePitchSliders[i].oscPitchDetuneName;
-                            synthDiv.appendChild(oscPitchDetune);
-
-
                             var randomKeyID = (Math.random().toString(36).slice(2))
                             var oscPitchOctave = document.createElement('input');
                             oscPitchOctave.type = "range";
                             oscPitchOctave.min = '-24';
                             oscPitchOctave.max = '-1';
-                            oscPitchOctave.value = returnedJSON.docs[0].synthOctavePitchSliders[i].oscPitchOctaveValue;
+                            // oscPitchOctave.value = synthQueForLoad[i][4];
                             oscPitchOctave.step = '1';
                             oscPitchOctave.className = "oscPitchOctave";
-                            oscPitchOctave.id = returnedJSON.docs[0].synthOctavePitchSliders[i].oscPitchOctaveName;
+                            oscPitchOctave.id = "oscPitchOctave-" + randomKeyID;
                             synthDiv.appendChild(oscPitchOctave);
 
 
@@ -245,7 +234,6 @@ $(function() {
                                 oscillator = audioContext.createOscillator();
                                 oscillator.type = "sawtooth";
                                 oscillator.frequency.value = 440 / oscPitchOctave.value;
-                                oscillator.detune.value = oscPitchDetune.value;
                                 oscillator.connect(audioContext.destination);
                                 oscillator.start(0);
 
@@ -296,7 +284,7 @@ $(function() {
 
 
 
-
+                // osc Note Value Slider Creation.
                 var oscPitchDetune = document.createElement('input');
                 oscPitchDetune.type = "range";
                 oscPitchDetune.min = '100';
@@ -306,6 +294,7 @@ $(function() {
                 oscPitchDetune.className = "oscPitchDetune";
                 oscPitchDetune.id = "oscPitchDetune-" + randomKeyID;
                 synthDiv.appendChild(oscPitchDetune);
+
 
                 var oscPitchOctave = document.createElement('input');
                 oscPitchOctave.type = "range";
