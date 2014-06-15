@@ -16,6 +16,69 @@ $(function() {
         var synth = {
             idCounter: null,
             synthName: null,
+            delayLength: null,
+            delayAmount: null,
+
+            makeGlobalSlidersAndKnobs: function() {
+
+                //*****  BEGIN --  Delay  length knob *******//
+
+                var delayLengthVal = document.getElementById("delay-length").value;
+
+                $(".dialDelayLength").knob({
+                    change: function(delayLengthVal) {
+                        console.log(delayLengthVal)
+                        synth.delayLength = delayLengthVal;
+                    },
+
+
+                    'min': 0,
+                    'max': 100,
+                    "displayPrevious": true,
+                    "width": 120,
+                    "thickness": .5,
+                    "data-cursor": true
+
+
+
+
+                });
+
+
+                //*****  END --  Delay  length knob *******//
+
+
+
+
+
+                //*****  BEGIN --  Delay  amount knob *******//
+
+                delayAmountVal = document.getElementById("delay-amount").value;
+
+                $(".dialDelayAmount").knob({
+                    change: function(delayAmountVal) {
+                        console.log(delayAmountVal / 100);
+                        synth.delayAmount = delayAmountVal / 100
+                    },
+
+
+                    'min': 0,
+                    'max': 100,
+                    "displayPrevious": true,
+                    "width": 120,
+                    "thickness": .5,
+                    "data-cursor": true
+
+
+
+                });
+
+
+                //*****  END --  Delay  length knob *******//
+
+
+
+            },
 
             makeNewSynth: function() {
                 $('#new-synth').click(function(event) {
@@ -100,8 +163,6 @@ $(function() {
                     });
 
                     /****************************************************************/
-
-
 
 
 
@@ -241,14 +302,45 @@ $(function() {
 
 
 
-
-
                             synthDiv.onmouseover = function() {
                                 oscillator = audioContext.createOscillator();
-                                oscillator.type = "sawtooth";
+                                oscillator.type = 'sawtooth';
                                 oscillator.frequency.value = 440 / oscPitchOctave.value;
                                 oscillator.detune.value = oscPitchDetune.value;
-                                oscillator.connect(audioContext.destination);
+
+                                console.log(synth.delayLength)
+
+                                var delay = audioContext.createDelayNode(1);
+                                delay.delayTime.value = synth.delayLength / 100;
+
+                                var dryChan = audioContext.createGain();
+                                var wetChanDelay = audioContext.createGain();
+                                var mixChanDelay = audioContext.createGain();
+
+
+
+
+
+                                // audio controls ( params) 
+                                dryChan.gain.value = 1;
+                                wetChanDelay.gain.value = synth.delayAmount;;
+
+
+
+
+
+
+
+
+                                oscillator.connect(delay);
+                                delay.connect(wetChanDelay);
+                                wetChanDelay.connect(delay);
+                                wetChanDelay.connect(mixChanDelay);
+
+
+                                oscillator.connect(dryChan);
+                                dryChan.connect(mixChanDelay);
+                                mixChanDelay.connect(audioContext.destination);
                                 oscillator.start(0);
 
                             }
@@ -278,7 +370,6 @@ $(function() {
 
 
 
-
                             synthDivHandle.ondblclick = function() {
                                 console.log(this.id);
 
@@ -304,6 +395,8 @@ $(function() {
                 });
             },
 
+
+
             createDiv: function() {
                 var synthDiv = document.createElement("div");
                 synthDiv.className = "synthDiv";
@@ -311,7 +404,6 @@ $(function() {
                 synthDiv.id = "synthDiv" + "-" + randomKeyID;
                 var applicationArea = document.getElementById('application-area');
                 var body = document.getElementsByName('body');
-
 
 
 
@@ -357,14 +449,58 @@ $(function() {
 
 
 
+                /* Routing diagram
+
+         
+                              (-----------------<--___          
+                    oscillator -> delay-> wetChanDelay^ ---mixChanDelay-->destination
+                    oscillator-> dryChan ----------------^
+
+                    Node graph                                */
+
+
+
                 synthDiv.onmouseover = function() {
                     oscillator = audioContext.createOscillator();
                     oscillator.type = 'sawtooth';
                     oscillator.frequency.value = 440 / oscPitchOctave.value;
                     oscillator.detune.value = oscPitchDetune.value;
-                    oscillator.connect(audioContext.destination);
+
+                    console.log(synth.delayLength)
+
+                    var delay = audioContext.createDelayNode(1);
+                    delay.delayTime.value = synth.delayLength / 100;
+
+                    var dryChan = audioContext.createGain();
+                    var wetChanDelay = audioContext.createGain();
+                    var mixChanDelay = audioContext.createGain();
+
+
+
+
+
+                    // audio controls ( params) 
+                    dryChan.gain.value = 1;
+                    wetChanDelay.gain.value = synth.delayAmount;
+
+
+
+
+
+
+
+
+                    oscillator.connect(delay);
+                    delay.connect(wetChanDelay);
+                    wetChanDelay.connect(delay);
+                    wetChanDelay.connect(mixChanDelay);
+
+
+                    oscillator.connect(dryChan);
+                    dryChan.connect(mixChanDelay);
+                    mixChanDelay.connect(audioContext.destination);
                     oscillator.start(0);
-                }
+                };
 
 
                 synthDiv.onmouseout = function() {
@@ -399,9 +535,6 @@ $(function() {
 
 
 
-
-
-
             },
 
             getUrlPatchID: function() {
@@ -432,6 +565,7 @@ $(function() {
                 this.getCurrentPatch();
                 this.getUrlPatchID();
                 this.clearSynths();
+                this.makeGlobalSlidersAndKnobs();
 
 
             }

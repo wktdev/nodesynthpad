@@ -36,12 +36,40 @@
 }
     }
 
+
+    #big-buttons{
+        background-color:green;
+        position:absolute;
+        width:100%;
+        height:40px;
+    }
+
     #form-container{
         position:absolute;
         top:100px;
 
     }
+      
+      #global-controls-container {
+        top:90px;
+        position:relative;
 
+
+      }
+
+      #delay-length-container{
+        top:0px;
+        position:absolute;
+        left:140px;
+
+   
+      }
+
+      #delay-amount-container{
+            top:0px;
+        position:absolute;
+        left:280px;
+      }
   
     #application-area {
         top:290px;
@@ -57,7 +85,7 @@
    #application-patch-list{
 
         position:relative;
-        top:120px;
+        top:140px;
         float:right;
         height:600px;
  
@@ -68,15 +96,19 @@
     }
 
     .button-container{
+        width:50%;
         position:relative;
         padding:10px;
-        top:60px;
+        top:100px;
     }
+
+
     #patch-name{
-        position:relative;
+        position:absolute;
         width:200px;
-        top:-27px;
-        left:320px;
+        top:10px;
+        left:230px;
+        float:right;
 
     }
 
@@ -85,13 +117,23 @@
         height:100px;
     };
 
+
     #app{
         position:relative;
     }
 
+    #clear-synths{
+    position:absolute;
+    
+}
+#submit-patch{
+    position:absolute;
+    left:100px;
+}
  
  .navbar-inverse {
 background-color: #BC1DAB;
 border-color: #EF5400;
 border-width: 2px;
 }
+

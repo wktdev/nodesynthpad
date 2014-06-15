@@ -45,7 +45,9 @@ var synthSchema = mongoose.Schema({
     patchName: String,
     synths: Object,
     synthOctavePitchSliders: Object,
-    synthDetunePitchSliders: Object
+    synthDetunePitchSliders: Object,
+    globalDelayLength: Number,
+    globalDelayWetValue: Number
 
 
 });
