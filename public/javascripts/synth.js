@@ -102,7 +102,10 @@ $(function() {
 
                 "synthDetunePitchSliders": [
 
-                ]
+                ],
+
+                "globalDelayLength": null,
+                "globalDelayWetValue": null
             },
 
             clearSynths: function() {
@@ -160,6 +163,9 @@ $(function() {
                         });
 
 
+
+
+
                     });
 
                     /****************************************************************/
@@ -183,6 +189,13 @@ $(function() {
 
 
                     });
+
+
+
+                    synth.synthPatch.globalDelayLength = synth.delayLength;
+                    synth.synthPatch.globalDelayWetValue = synth.delayAmount;
+
+
 
                     /****************************************************************/
 
@@ -249,15 +262,24 @@ $(function() {
                     url: "/loadedpatch"
                 }).done(function(returnedJSON) {
 
-                    // console.log(returnedJSON.docs);
-                    // console.log(returnedJSON.docs[0].patchName);
-                    // console.log(returnedJSON.docs[0].synths.length);
+                    synth.delayLength = returnedJSON.docs[0].globalDelayLength;
+                    synth.delayAmount = returnedJSON.docs[0].globalDelayWetValue;
+
+                    var delayLengthValSetter = document.getElementById("delay-length");
+                    var delayAmountValSetter = document.getElementById("delay-amount");
+
+                    delayLengthValSetter.value = synth.delayLength;
+                    delayAmountValSetter.value = synth.delayAmount
+
+
 
                     for (i = 0; i < returnedJSON.docs[0].synths.length; i += 1) {
 
                         (function(i) {
 
-                            console.log(returnedJSON.docs[0].synths[i].synth_name)
+                            console.log(returnedJSON.docs[0].synths[i].synth_name);
+
+
 
 
                             var synthDiv = document.createElement("div");
