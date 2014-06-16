@@ -4,4 +4,4 @@ This is a synth experiment where users can create and playback oscillators at di
 Uses Node.js, Express and MongoDB to save state in the form of user created "patches".
 
 
-![Alt text](https://github.com/wktdev/nodesynthpad/blob/master/public/images/img.PNG)
+![Alt text](https://raw.githubusercontent.com/wktdev/nodesynthpad/master/public/images/img.PNG)
