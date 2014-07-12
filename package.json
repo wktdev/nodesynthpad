@@ -1,17 +1,22 @@
 {
-  "name": "ex",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
+  "name": "y",
+  "version": "0.0.0",
+  "description": "y",
+  "main": "node start",
   "dependencies": {
-    "express": "~4.2.0",
-    "static-favicon": "~1.0.0",
-    "morgan": "~1.0.0",
-    "cookie-parser": "~1.0.1",
-    "body-parser": "~1.0.0",
-    "debug": "~0.7.4",
-    "jade": "~1.3.0"
-  }
+    "express": "^3.4.8",
+    "consolidate": "^0.10.0",
+    "formidable": "^1.0.14",
+    "handlebars": "^2.0.0-alpha.4",
+    "hbs": "^2.7.0",
+    "jade": "^1.3.0",
+    "zurb-foundation-npm": "^0.0.1",
+    "mongoose": "^3.8.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "William Turner",
+  "license": "copywritten with high barriers non open source where applicable"
 }
