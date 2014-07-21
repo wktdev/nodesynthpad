@@ -332,7 +332,7 @@ $(function() {
 
                                 console.log(synth.delayLength)
 
-                                var delay = audioContext.createDelayNode(1);
+                                var delay = audioContext.createDelay(1);
                                 delay.delayTime.value = synth.delayLength / 100;
 
                                 var dryChan = audioContext.createGain();
@@ -490,7 +490,7 @@ $(function() {
 
                     console.log(synth.delayLength)
 
-                    var delay = audioContext.createDelayNode(1);
+                    var delay = audioContext.createDelay(1);
                     delay.delayTime.value = synth.delayLength / 100;
 
                     var dryChan = audioContext.createGain();
