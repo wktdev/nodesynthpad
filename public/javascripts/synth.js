@@ -363,14 +363,14 @@ $(function() {
                                 oscillator.connect(dryChan);
                                 dryChan.connect(mixChanDelay);
                                 mixChanDelay.connect(audioContext.destination);
-                                oscillator.start(0);
+                                oscillator.start(audioContext.currentTime + 0);
 
                             }
 
 
 
                             synthDiv.onmouseout = function() {
-                                oscillator.stop();
+                                oscillator.stop(audioContext.currentTime + 0);
 
                             };
 
@@ -387,7 +387,7 @@ $(function() {
                                 handle: synthDivHandle
                             });
                             synthDivHandle.onmousemove = function() {
-                                oscillator.stop(0)
+                                oscillator.stop(audioContext.currentTime + 0)
                             }
 
 
@@ -521,12 +521,12 @@ $(function() {
                     oscillator.connect(dryChan);
                     dryChan.connect(mixChanDelay);
                     mixChanDelay.connect(audioContext.destination);
-                    oscillator.start(0);
+                    oscillator.start(audioContext.currentTime + 0);
                 };
 
 
                 synthDiv.onmouseout = function() {
-                    oscillator.stop();
+                    oscillator.stop(audioContext.currentTime + 0);
 
                 };
 
@@ -534,7 +534,7 @@ $(function() {
                     handle: synthDivHandle
                 });
                 synthDivHandle.onmousemove = function() {
-                    oscillator.stop(0)
+                    oscillator.stop(audioContext.currentTime + 0)
                 }
 
                 synthDivHandle.ondblclick = function() {
